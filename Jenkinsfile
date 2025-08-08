@@ -36,8 +36,8 @@ pipeline {
       steps {
         sh '''
           cd app/src
-          docker build -t ${IMAGE}:${TAG} .
-          docker tag ${IMAGE}:${TAG} ${IMAGE}:latest
+          podman build -t ${IMAGE}:${TAG} .
+          podman tag ${IMAGE}:${TAG} ${IMAGE}:latest
         '''
       }
     }
@@ -54,7 +54,7 @@ pipeline {
       }
       post {
         always {
-          sh 'docker logout || true'
+          sh 'podman logout || true'
         }
       }
     }
