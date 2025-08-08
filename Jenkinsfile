@@ -1,25 +1,26 @@
 pipeline {
-  agent {
-    kubernetes {
-      yaml """
-        apiVersion: v1
-        kind: Pod
-        spec:
-          containers:
-          - name: docker
-            image: docker:24.0.5-cli
-            tty: true
-            volumeMounts:
-            - name: dockersock
-              mountPath: /var/run/docker.sock
-          volumes:
-          - name: dockersock
-            hostPath:
-              path: /var/run/docker.sock
-        """
-      defaultContainer 'docker'
-    }
-  }
+  // agent {
+  //   kubernetes {
+  //     yaml """
+  //       apiVersion: v1
+  //       kind: Pod
+  //       spec:
+  //         containers:
+  //         - name: docker
+  //           image: docker:24.0.5-cli
+  //           tty: true
+  //           volumeMounts:
+  //           - name: dockersock
+  //             mountPath: /var/run/docker.sock
+  //         volumes:
+  //         - name: dockersock
+  //           hostPath:
+  //             path: /var/run/docker.sock
+  //       """
+  //     defaultContainer 'docker'
+  //   }
+  // }
+  agent any
 
   environment {
     REGISTRY = 'innothinh'
@@ -45,9 +46,9 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'registry-cred', usernameVariable: 'REG_USR', passwordVariable: 'REG_PSW')]) {
           sh '''
-            echo "$REG_PSW" | docker login -u "$REG_USR" --password-stdin
-            docker push ${IMAGE}:${TAG}
-            docker push ${IMAGE}:latest
+            echo "$REG_PSW" | podman login -u "$REG_USR" --password-stdin docker.io
+            podman push ${IMAGE}:${TAG}
+            podman push ${IMAGE}:latest
           '''
         }
       }
