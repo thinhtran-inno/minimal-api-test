@@ -23,11 +23,18 @@ pipeline {
 
     stage('Push Image') {
       steps {
-        sh """
-          echo "${REGISTRY_CRED_PSW}" | docker login -u "${REGISTRY_CRED_USR}" --password-stdin
-          docker push ${IMAGE}:${TAG}
-          docker push ${IMAGE}:latest
-        """
+        withCredentials([usernamePassword(credentialsId: 'registry-cred', usernameVariable: 'REG_USR', passwordVariable: 'REG_PSW')]) {
+          sh '''
+            echo "$REG_PSW" | docker login -u "$REG_USR" --password-stdin
+            docker push ${IMAGE}:${TAG}
+            docker push ${IMAGE}:latest
+          '''
+        }
+      }
+      post {
+        always {
+          sh 'docker logout || true'
+        }
       }
     }
 
@@ -46,7 +53,4 @@ pipeline {
     }
   }
 
-  post {
-    always { sh 'docker logout || true' }
-  }
 }
