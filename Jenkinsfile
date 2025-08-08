@@ -1,26 +1,26 @@
 pipeline {
-  // agent {
-  //   kubernetes {
-  //     yaml """
-  //       apiVersion: v1
-  //       kind: Pod
-  //       spec:
-  //         containers:
-  //         - name: docker
-  //           image: docker:24.0.5-cli
-  //           tty: true
-  //           volumeMounts:
-  //           - name: dockersock
-  //             mountPath: /var/run/docker.sock
-  //         volumes:
-  //         - name: dockersock
-  //           hostPath:
-  //             path: /var/run/docker.sock
-  //       """
-  //     defaultContainer 'docker'
-  //   }
-  // }
-  agent any
+  agent {
+    kubernetes {
+      yaml """
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: docker
+            image: docker:24.0.5-cli
+            tty: true
+            volumeMounts:
+            - name: dockersock
+              mountPath: /var/run/docker.sock
+          volumes:
+          - name: dockersock
+            hostPath:
+              path: /var/run/docker.sock
+        """
+      defaultContainer 'docker'
+    }
+  }
+  // agent any
 
   environment {
     REGISTRY = 'innothinh'
