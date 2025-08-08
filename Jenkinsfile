@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    REGISTRY = 'YOUR_REGISTRY_USERNAME'
+    REGISTRY = 'innothinh'
     IMAGE = "${REGISTRY}/kubesphere-starter-api"
     TAG = "${env.GIT_COMMIT ?: 'dev'}"
     KUBECONFIG = credentials('kubeconfig-cred') // create this credential in KubeSphere
@@ -45,7 +45,7 @@ pipeline {
 
           kubectl apply -f k8s/namespace.yaml
           # Patch the image line with the exact tag for traceability
-          sed -e "s#YOUR_REGISTRY_USERNAME/kubesphere-starter-api:latest#${IMAGE}:${TAG}#g" k8s/deployment.yaml | kubectl apply -f -
+          sed -e "s#innothinh/kubesphere-starter-api:latest#${IMAGE}:${TAG}#g" k8s/deployment.yaml | kubectl apply -f -
           kubectl apply -f k8s/service.yaml
           kubectl apply -f k8s/ingress.yaml
 
