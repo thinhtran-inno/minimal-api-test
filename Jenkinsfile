@@ -36,8 +36,8 @@ pipeline {
       steps {
         sh '''
           cd app/src
-          podman build -t ${IMAGE}:${TAG} .
-          podman tag ${IMAGE}:${TAG} ${IMAGE}:latest
+          docker build -t ${IMAGE}:${TAG} .
+          docker tag ${IMAGE}:${TAG} ${IMAGE}:latest
         '''
       }
     }
@@ -46,15 +46,15 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'registry-cred', usernameVariable: 'REG_USR', passwordVariable: 'REG_PSW')]) {
           sh '''
-            echo "$REG_PSW" | podman login -u "$REG_USR" --password-stdin docker.io
-            podman push ${IMAGE}:${TAG}
-            podman push ${IMAGE}:latest
+            echo "$REG_PSW" | docker login -u "$REG_USR" --password-stdin
+            docker push ${IMAGE}:${TAG}
+            docker push ${IMAGE}:latest
           '''
         }
       }
       post {
         always {
-          sh 'podman logout || true'
+          sh 'docker logout || true'
         }
       }
     }

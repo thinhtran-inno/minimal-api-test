@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: YOUR_REGISTRY_USERNAME/kubesphere-starter-api:latest
+          image: innothinh/kubesphere-starter-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
