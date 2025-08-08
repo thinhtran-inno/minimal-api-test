@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starter-api
+  namespace: starter
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: starter-api
+  template:
+    metadata:
+      labels:
+        app: starter-api
+    spec:
+      containers:
+        - name: api
+          image: YOUR_REGISTRY_USERNAME/kubesphere-starter-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APP_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['kubectl.kubernetes.io/restartedAt']
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10

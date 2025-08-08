@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: starter-api
+  namespace: starter
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: starter.local   # change to your domain or nip.io later
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: starter-api
+                port:
+                  number: 80
